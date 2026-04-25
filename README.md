@@ -1,1 +1,32 @@
 # CS-230
+Software Design Document — Draw It or Lose It
+Author: Nida Qadri
+
+This repository contains the completed software design document created for The Gaming Room as part of the CS 230 course. The document was developed incrementally across three projects and covers the full arc of designing a scalable, cross-platform web application — from initial requirements gathering through operating platform recommendations and distributed systems architecture.
+
+Project Summmary: 
+The Client: The Gaming Room is a game development company that operates an Android-based drawing and guessing game called Draw It or Lose It, modeled after the classic TV game show Win, Lose or Draw. The client wanted to expand the game beyond Android and make it accessible across multiple operating systems and device types through a web-based platform. Their core requirements included support for multiple teams and players per game, unique name enforcement for games and teams, a singleton game service to ensure only one active instance runs in memory at a time, and timed rounds with a progressively revealed image as the central gameplay mechanic.
+The software design document addresses all of these requirements and guides both the client and the development team through the architectural decisions necessary to bring the game to a distributed, multi-platform environment.
+
+What I Did Particularly Well
+One area where I feel the documentation is strongest is the domain model analysis. Explaining the UML class diagram, how the Entity superclass reduces duplication across Game, Team, and Player, how GameService enforces the singleton pattern, and how the overall hierarchy maps directly to the game's rules, gave the document a solid technical foundation. I was careful to connect each design choice back to a specific software requirement, which made the rationale clear for both a technical reader and a non-technical client.
+
+The Recommendations section is also an area of strength. Rather than offering surface-level suggestions, each subsection, including operating platform, OS architecture, storage management, memory management, distributed systems, and security, includes specific technologies, explains why they were chosen over alternatives, and addresses the real-world tradeoffs involved. For example, recommending Linux over Windows Server was not just a cost argument; the analysis covered kernel architecture, native toolchain compatibility, and cloud scalability in a way that a development team could act on directly.
+
+How the Design Document Helped During Development
+Working through the design document before writing any code made the development process significantly more deliberate. The process of documenting requirements forced an early confrontation with constraints that might otherwise have surfaced late, for instance, the need to enforce unique game and team names, or the memory implications of a singleton service holding references to potentially hundreds of active game objects. Having those constraints written down made it easier to evaluate design decisions against them as the code took shape.
+
+The domain model section was especially useful as a reference during implementation. Because the class hierarchy and relationships had already been reasoned through and documented, there was less ambiguity about where a given piece of logic should live. The design document functioned as a contract that kept the implementation aligned with the original requirements.
+
+What I Would Revise
+If I could revise one part of these documents, I would expand the System Architecture View section. In its current state, that section contains a placeholder note acknowledging that architecture diagrams may be required but does not include one. A visual topology diagram showing the relationship between the client layer, the load balancer, the application server cluster, the Redis cache, and the PostgreSQL primary-replica pair would make the distributed systems design significantly easier to understand at a glance. Written descriptions of distributed architecture are valuable, but a diagram communicates the overall shape of the system in a way that prose alone cannot. In a future revision, I would add both a logical architecture diagram and a network topology diagram to complement the written recommendations.
+
+Interpreting and Implementing User Needs
+Translating the client's needs into design decisions required distinguishing between what the client explicitly stated and what their requirements implied. For example, The Gaming Room specified that game names must be unique and that only one game instance should exist in memory, but the deeper implication is that the application needs a centralized, authoritative state manager. That understanding drove the recommendation of a singleton GameService class and, at the infrastructure level, the use of a distributed session cache (Redis) so that state remains consistent across server nodes in a cloud deployment.
+
+Keeping the user's needs at the center of design decisions matters because software that is technically elegant but functionally misaligned with its users provides little value. Every architectural choice, from the file system to the authentication model, has downstream effects on the user experience. A design that ignores user needs may work in isolation but fail in the real-world conditions users actually encounter, such as slow mobile connections, concurrent multi-team sessions, or the need to recover quickly from a dropped connection.
+
+Design Approach and Future Strategies
+My overall approach to this design was to move from the most concrete and specific (the client's explicit requirements) outward toward the more general (platform and infrastructure recommendations). Starting with requirements ensured that every subsequent decision had a traceable justification rather than being a preference or assumption.
+
+For future projects, I would continue to rely on UML class diagrams as an early design tool because they make object relationships explicit before any code is written, which surfaces structural problems cheaply. I would also place greater emphasis on failure mode analysis earlier in the process, asking not just "how does this component work?" but "what happens when this component fails, and how does the rest of the system respond?" That discipline is especially important for distributed systems where component failures are not exceptional events but expected conditions that the design must accommodate from the start.
