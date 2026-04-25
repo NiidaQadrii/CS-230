@@ -1,6 +1,6 @@
 # Software Design Document — Draw It or Lose It
 Author: Nida Qadri
-
+ 
 This repository contains the completed software design document created for The Gaming Room as part of the CS 230 course. The document was developed incrementally across three projects and covers the full arc of designing a scalable, cross-platform web application — from initial requirements gathering through operating platform recommendations and distributed systems architecture.
 
 Project Summmary: 
